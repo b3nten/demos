@@ -1,0 +1,8 @@
+{
+	"name": "demos",
+	"compatibility_date": "2025-10-29",
+	"assets": {
+		"directory": "./public/",
+		"not_found_handling": "single-page-application"
+	}
+}

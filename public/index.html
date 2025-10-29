@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en" class="quiet-cloak quiet-rose quiet-dark" data-quiet-preload="">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script
+			type="module"
+			src="https://cdn.jsdelivr.net/npm/@quietui/quiet-browser@1.6.1/dist/quiet.loader.js"
+		></script>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@quietui/quiet-browser@1.6.1/dist/themes/quiet.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/tailwindcss@4.1.16/preflight.css"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/asserts.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/assets.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/checks.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/ecs.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/events.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/input.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/lib.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/logging.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/math.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/scope.mjs"
+		/>
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@100x/engine@0.0.5/es2022/structures.mjs"
+		/>
+		<link rel="modulepreload" href="https://esm.sh/codemirror" />
+		<link
+			rel="modulepreload"
+			href="https://esm.sh/@codemirror/lang-javascript"
+		/>
+		<link rel="modulepreload" href="https://esm.sh/thememirror" />
+		<script type="importmap">
+			{
+				"imports": {
+					"@100x/engine/asserts": "https://esm.sh/@100x/engine@0.0.5/es2022/asserts.mjs",
+					"@100x/engine/assets": "https://esm.sh/@100x/engine@0.0.5/es2022/assets.mjs",
+					"@100x/engine/checks": "https://esm.sh/@100x/engine@0.0.5/es2022/checks.mjs",
+					"@100x/engine/ecs": "https://esm.sh/@100x/engine@0.0.5/es2022/ecs.mjs",
+					"@100x/engine/events": "https://esm.sh/@100x/engine@0.0.5/es2022/events.mjs",
+					"@100x/engine/input": "https://esm.sh/@100x/engine@0.0.5/es2022/input.mjs",
+					"@100x/engine/lib": "https://esm.sh/@100x/engine@0.0.5/es2022/lib.mjs",
+					"@100x/engine/logging": "https://esm.sh/@100x/engine@0.0.5/es2022/logging.mjs",
+					"@100x/engine/math": "https://esm.sh/@100x/engine@0.0.5/es2022/math.mjs",
+					"@100x/engine/scope": "https://esm.sh/@100x/engine@0.0.5/es2022/scope.mjs",
+					"@100x/engine/structures": "https://esm.sh/@100x/engine@0.0.5/es2022/structures.mjs",
+					"@100x/engine/three": "https://esm.sh/@100x/engine@0.0.5/es2022/three.mjs",
+					"three": "https://esm.sh/three@0.180.0/es2022/three.bundle.mjs",
+					"codemirror": "https://esm.sh/codemirror",
+					"@codemirror/lang-javascript": "https://esm.sh/@codemirror/lang-javascript",
+					"thememirror": "https://esm.sh/thememirror"
+				}
+			}
+		</script>
+		<!-- Meta -->
+		<title>Demos</title>
+		<!-- Styles -->
+		<style>
+			@theme {
+				--color-clifford: #da373d;
+			}
+			body {
+				background-color: black;
+				font-family: monospace;
+			}
+			.cm-editor {
+				background-color: transparent;
+			}
+			.cm-gutter {
+				user-select: none;
+			}
+			quiet-splitter {
+				position: fixed;
+				display: relative;
+				inset: 0;
+			}
+			quiet-splitter::part(end),
+			quiet-splitter::part(start) {
+				position: relative;
+			}
+			repl-ui {
+				position: absolute;
+				inset: 0;
+			}
+			repl-toolbar {
+				display: flex;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				justify-content: space-between;
+				align-items: center;
+				padding-inline: 1rem;
+				padding-top: 8px;
+				padding-bottom: 8px;
+				background-color: black;
+				color: white;
+				font-size: 0.75rem;
+			}
+			repl-editor {
+				position: absolute;
+				inset: 0;
+				top: 40px;
+				overflow: scroll;
+				overscroll-behavior: none;
+			}
+			repl-playground {
+				position: absolute;
+				inset: 0;
+				z-index: -10;
+				overflow-x: hidden;
+				overflow-y: auto;
+			}
+			repl-error {
+				position: fixed;
+				right: 0;
+				left: 0;
+				bottom: 0;
+				padding: 1rem;
+				font-family: monospace;
+				color: red;
+				text-align: right;
+			}
+		</style>
+		<!-- UI -->
+		<script type="module">
+			import { EditorView, basicSetup } from "codemirror";
+			import { javascript } from "@codemirror/lang-javascript";
+			import { boysAndGirls } from "thememirror";
+			import { Input, KeyPressedEvent } from "@100x/engine/input";
+			import { Logger, LogLevel, colors } from "@100x/engine/logging";
+			import { run, runCatching } from "@100x/engine/lib";
+			import { createEvent, EventManager } from "@100x/engine/events";
+			import { assert } from "@100x/engine/asserts";
+
+			const stateUpdatedEvent = createEvent("state-updated");
+			const fileChangeEvent = createEvent("file-change");
+			const resetFileEvent = createEvent("reset-file");
+			const runCodeEvent = createEvent("run-code");
+			const toggleEditorEvent = createEvent("toggle-editor");
+			const toggleSplitViewEvent = createEvent("toggle-split-pane");
+
+			class ReplErrorBar extends HTMLElement {
+				static {
+					customElements.define("repl-error", this);
+				}
+				setup(state, events) {}
+			}
+
+			class ReplEditor extends HTMLElement {
+				static {
+					customElements.define("repl-editor", this);
+				}
+
+				setup(state, events) {
+					this.state = state;
+					this.events = events;
+				}
+
+				connectedCallback() {
+					this.update();
+					this.events.register(stateUpdatedEvent, this.update);
+				}
+
+				disconnectedCallback() {
+					this.events.unregister(stateUpdatedEvent, this.update);
+				}
+
+				update = () => {
+					if (this.state.editorMode === "hidden") {
+						this.style.display = "none";
+					} else {
+						this.style.display = "block";
+					}
+				};
+			}
+
+			class ReplToolbar extends HTMLElement {
+				static {
+					customElements.define("repl-toolbar", this);
+				}
+
+				state;
+				events;
+
+				setup(state, events) {
+					this.state = state;
+					this.events = events;
+				}
+
+				fileSelector = run(() => {
+					const div = document.createElement("div");
+					div.style.maxWidth = "400px";
+					div.style.display = "flex";
+					div.style.gap = "8px";
+					div.style.alignItems = "center";
+					return div;
+				});
+
+				rightToolbar = run(() => {
+					const div = document.createElement("div");
+					div.style.display = "flex";
+					div.style.gap = "8px";
+					div.style.alignItems = "center";
+					return div;
+				});
+
+				update = () => {
+					const files = this.state.files;
+
+					this.fileSelector.innerHTML = `
+              <p color="white">${this.state.title}</p>
+              <quiet-select id="file-selector" name="file" size="xs" value=${this.state.currentFile.href}>
+                ${files.map(({ name, href }) => `<option value="${href}">${name}</option>`)}
+              </quiet-select>
+            `;
+					this.appendChild(this.fileSelector);
+
+					this.rightToolbar.innerHTML = `
+              <quiet-button icon-label="Run" id="play-button" size="xs"><quiet-icon name="player-play"></quiet-icon></quiet-button>
+              <quiet-tooltip for="play-button">Run the code</quiet-tooltip>
+              <quiet-button icon-label="Reset" id="restore-button" size="xs"><quiet-icon name="restore"></quiet-icon></quiet-button>
+              <quiet-tooltip for="restore-button">Reset the code</quiet-tooltip>
+              <quiet-button icon-label="Toggle Editor" id="show-editor-button" size="xs"><quiet-icon name="code"></quiet-icon></quiet-button>
+              <quiet-tooltip for="show-editor-button">Toggle editor visibility</quiet-tooltip>
+              <quiet-button icon-label="Toggle Split Pane" id="toggle-split-view-button" size="xs"><quiet-icon name="layout-columns"></quiet-icon></quiet-button>
+              <quiet-tooltip for="toggle-split-view-button">Toggle split pane</quiet-tooltip>
+            `;
+					this.appendChild(this.rightToolbar);
+
+					this.querySelector("#file-selector").addEventListener(
+						"quiet-change",
+						(e) => {
+							this.events.notify("file-change", e.target.value);
+						},
+					);
+
+					this.querySelector("#restore-button").addEventListener(
+						"click",
+						() => {
+							this.events.notify(resetFileEvent);
+						},
+					);
+
+					this.querySelector("#play-button").addEventListener("click", () => {
+						this.events.notify(runCodeEvent);
+					});
+
+					this.querySelector("#show-editor-button").addEventListener(
+						"click",
+						() => {
+							this.events.notify(toggleEditorEvent);
+						},
+					);
+
+					this.querySelector("#toggle-split-view-button").addEventListener(
+						"click",
+						() => {
+							this.events.notify(toggleSplitViewEvent);
+						},
+					);
+
+					this.querySelector("#show-editor-button").setAttribute(
+						"toggle",
+						this.state.editorMode !== "hidden" ? "on" : "off",
+					);
+					this.querySelector("#toggle-split-view-button").setAttribute(
+						"toggle",
+						this.state.editorMode === "split" ? "on" : "off",
+					);
+				};
+
+				connectedCallback() {
+					this.events.register(stateUpdatedEvent, this.update);
+					this.update();
+				}
+
+				disconnectedCallback() {
+					this.events.unregister(stateUpdatedEvent, this.update);
+				}
+			}
+
+			class ReplPlayground extends HTMLElement {
+				static {
+					customElements.define("repl-playground", this);
+				}
+
+				observer = new ResizeObserver(() => {
+					this.dispatchEvent(new CustomEvent("resize"));
+				});
+
+				connectedCallback() {
+					this.observer.observe(this);
+				}
+
+				disconnectedCallback() {
+					this.observer.unobserve(this);
+				}
+			}
+
+			class Repl extends HTMLElement {
+				static {
+					customElements.define("js-repl", this);
+				}
+
+				static logger = new Logger("repl", LogLevel.Debug, colors.sunset);
+
+				events = new EventManager();
+
+				state = {
+					title: "repl",
+					files: null, // [{ name: string, href: "url" | "localstorage:{name}" }]
+					currentFile: null, // { name: string, href: "url" | "localstorage:{name}" }
+					editorMode: null, // hidden, fullscreen, split
+				};
+
+				editor;
+
+				errorWidget = document.createElement("repl-error");
+
+				toolbarWidget = document.createElement("repl-toolbar");
+
+				editorWidget = document.createElement("repl-editor");
+
+				uiWidget = document.createElement("repl-ui");
+
+				playgroundWidget = document.createElement("repl-playground");
+
+				splitterWidget = document.createElement("quiet-splitter");
+
+				cleanupFns = new Set();
+
+				connectedCallback() {
+					this.state.files = JSON.parse(this.getAttribute("files") ?? "[]");
+					const maybeFile = new URL(location.href).searchParams.get("file");
+					this.state.currentFile = maybeFile
+						? this.state.files.find((f) => f.href === maybeFile)
+						: this.state.files[0];
+
+					this.state.editorMode =
+						this.getAttribute("defaultView") ?? "fullscreen";
+
+					this.state.title = this.getAttribute("title") ?? "repl";
+
+					this.editor = new EditorView({
+						extensions: [basicSetup, boysAndGirls, javascript()],
+						parent: this.editorWidget,
+					});
+
+					this.loadModule().then(this.runCodeInEditor);
+
+					this.events.register(fileChangeEvent, this.switchFile);
+					this.events.register(resetFileEvent, this.resetFile);
+					this.events.register(runCodeEvent, this.runCodeInEditor);
+					this.events.register(toggleEditorEvent, this.toggleEditor);
+					this.events.register(toggleSplitViewEvent, this.toggleSplitView);
+
+					document.addEventListener("keydown", (event) => {
+						if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+							event.preventDefault();
+							this.saveFile();
+							this.runCodeInEditor();
+						}
+					});
+
+					[this.errorWidget, this.toolbarWidget, this.editorWidget].forEach(
+						(widget) => {
+							widget.setup(this.state, this.events);
+							this.uiWidget.appendChild(widget);
+						},
+					);
+
+					this.render();
+
+					Repl.logger.success("repl loaded");
+				}
+
+				saveFile = () => {
+					let code = this.editor.state.doc.toString();
+					localStorage.setItem(this.state.currentFile.href, code);
+				};
+
+				switchFile = (href) => {
+					this.state.currentFile = this.state.files.find(
+						(file) => file.href === href,
+					);
+					const url = new URL(location.href);
+					url.searchParams.set("file", href);
+					history.pushState(null, null, url.toString());
+					this.loadModule().then(this.runCodeInEditor);
+				};
+
+				resetFile = () => {
+					localStorage.removeItem(this.state.currentFile.href);
+					this.loadModule().then(this.runCodeInEditor);
+				};
+
+				loadModule = async () => {
+					let content = localStorage.getItem(this.state.currentFile.href);
+
+					if (!content) {
+						const url = new URL(this.state.currentFile.href, location.origin);
+						url.searchParams.set("t", Date.now());
+						content = await fetch(url)
+							.then((response) => response.text())
+							.catch((error) => {
+								Repl.logger.error(`Failed to load module: ${error.message}`);
+								return "// repl\n";
+							});
+					}
+
+					this.editor.dispatch({
+						changes: {
+							from: 0,
+							to: this.editor.state.doc.length,
+							insert: content,
+						},
+					});
+				};
+
+				runCodeInEditor = () => {
+					const playground = document.querySelector("repl-playground");
+					playground.innerHTML = "";
+					playground.cleanup = (fn) => this.cleanupFns.add(fn);
+					this.cleanupFns.forEach(run);
+					this.cleanupFns.clear();
+
+					let code = this.editor.state.doc.toString();
+
+					code = `
+              const playground = document.querySelector("repl-playground");
+              import.meta.main = true;
+              ${code}`;
+
+					const blob = new Blob([code], { type: "text/javascript" });
+					const moduleUrl = URL.createObjectURL(blob);
+
+					import(moduleUrl)
+						.then(() => {
+							this.errorWidget.innerText = "";
+						})
+						.catch((error) => {
+							Repl.logger.error("evaluating code", error);
+							this.errorWidget.innerText = String(error);
+						});
+				};
+
+				toggleEditor = () => {
+					let current = this.state.editorMode;
+					this.state.editorMode =
+						current === "hidden" ? "fullscreen" : "hidden";
+					this.events.notify(stateUpdatedEvent);
+					this.render();
+				};
+
+				toggleSplitView = () => {
+					let current = this.state.editorMode;
+					this.state.editorMode = current === "split" ? "fullscreen" : "split";
+					this.events.notify(stateUpdatedEvent);
+					this.render();
+				};
+
+				render = () => {
+					if (this.state.editorMode === "split") {
+						this.uiWidget.setAttribute("slot", "start");
+						this.playgroundWidget.setAttribute("slot", "end");
+						this.splitterWidget = document.createElement("quiet-splitter");
+						this.splitterWidget.appendChild(this.uiWidget);
+						this.splitterWidget.appendChild(this.playgroundWidget);
+						this.appendChild(this.splitterWidget);
+					} else {
+						this.appendChild(this.uiWidget);
+						this.appendChild(this.playgroundWidget);
+						this.splitterWidget.remove();
+					}
+				};
+			}
+		</script>
+	</head>
+	<body>
+		<js-repl
+			title="Demos"
+			defaultView="fullscreen"
+			files='[
+				{ "name": "cube.js", "href": "/repl/cube.js" },
+				{ "name": "shader.js", "href": "/repl/shader.js" },
+				{ "name": "basic", "href": "/repl/basic.js" }
+			]'
+		></js-repl>
+	</body>
+</html>
