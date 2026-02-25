@@ -30,8 +30,8 @@
                 --panel: #0f111a;
                 --panel-muted: #161a26;
                 --text: #f3f4f6;
-                --text-muted: #b8c0d4;
-                --accent: #58a6ff;
+                --text-muted: #d7bfd1;
+                --accent: #f3a6d8;
                 --danger: #ff5a6f;
                 --border: #2a3041;
                 --radius: 8px;
@@ -49,7 +49,7 @@
                 height: 100%;
                 background: radial-gradient(
                     1200px 700px at 0% 0%,
-                    #10172a 0%,
+                    #2a1626 0%,
                     var(--bg) 58%
                 );
                 color: var(--text);
@@ -134,7 +134,7 @@
             }
 
             .repl-button:hover {
-                border-color: #4a5470;
+                border-color: #8e5f7d;
             }
 
             .repl-button:disabled {
@@ -144,8 +144,8 @@
 
             .repl-button[data-on="true"] {
                 border-color: var(--accent);
-                color: #dbeafe;
-                background: #1b253b;
+                color: #ffe8f6;
+                background: #3a2132;
             }
 
             .repl-button.icon-btn {
@@ -257,8 +257,8 @@
                 position: relative;
                 cursor: col-resize;
                 background: linear-gradient(180deg, #22283a 0%, #1a1f2d 100%);
-                border-left: 1px solid #2f3750;
-                border-right: 1px solid #2f3750;
+                border-left: 1px solid #5f3f52;
+                border-right: 1px solid #5f3f52;
             }
 
             .split-divider::before {
@@ -270,12 +270,12 @@
                 height: 42px;
                 border-radius: 999px;
                 transform: translate(-50%, -50%);
-                background: #59688d;
+                background: #a16a8b;
             }
 
             .split-divider:hover::before,
             .split-divider.dragging::before {
-                background: #7ea4ff;
+                background: #e7a8d0;
             }
 
             @media (max-width: 900px) {
@@ -312,6 +312,7 @@
                 fileChange: "file-change",
                 resetFile: "reset-file",
                 runCode: "run-code",
+                downloadCurrentFile: "download-current-file",
                 toggleEditor: "toggle-editor",
                 toggleSplitView: "toggle-split-view",
                 createTempFile: "create-temp-file",
@@ -330,6 +331,7 @@
                 rename: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4zM12 6l4 4"></path></svg>`,
                 del: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12M10 10v7M14 10v7"></path></svg>`,
                 reset: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6M7.5 16A7 7 0 0019 10M16.5 8A7 7 0 005 14"></path></svg>`,
+                download: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M8 11l4 4 4-4M4 19h16"></path></svg>`,
                 editor: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6L3 12l5 6M16 6l5 6-5 6M14 4l-4 16"></path></svg>`,
                 split: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M12 5v14"></path></svg>`,
             };
@@ -431,8 +433,9 @@
                       </div>
                       <div class="toolbar-group controls-group">
                         <button class="repl-button icon-btn" id="run-button" aria-label="Run code" title="Run code (Cmd/Ctrl+S)">${icons.run}</button>
+                        <button class="repl-button icon-btn" id="download-file-button" aria-label="Download current file" title="Download current file">${icons.download}</button>
                         <button class="repl-button icon-btn" id="new-file-button" aria-label="Create temp file" title="Create temp file">${icons.newFile}</button>
-                        <button class="repl-button icon-btn" id="rename-file-button" ${this.state.currentFile?.isTemp ? "" : "disabled"} aria-label="Rename selected temp file" title="Rename selected temp file">${icons.rename}</button>
+                        ${this.state.currentFile?.isTemp ? `<button class="repl-button icon-btn" id="rename-file-button" aria-label="Rename selected temp file" title="Rename selected temp file">${icons.rename}</button>` : ""}
                         ${this.state.currentFile?.isTemp ? `<button class="repl-button icon-btn" id="delete-file-button" aria-label="Delete selected temp file" title="Delete selected temp file">${icons.del}</button>` : ""}
                         <button class="repl-button icon-btn" id="reset-button" aria-label="Reset current file" title="Reset current file">${icons.reset}</button>
                         <button class="repl-button icon-btn" id="toggle-editor-button" data-on="${this.state.editorMode !== "hidden"}" aria-label="Show or hide editor" title="Show or hide editor">${icons.editor}</button>
@@ -453,19 +456,22 @@
                         "click",
                         () => this.bus.emit(events.runCode),
                     );
+                    this.querySelector(
+                        "#download-file-button",
+                    )?.addEventListener("click", () =>
+                        this.bus.emit(events.downloadCurrentFile),
+                    );
                     this.querySelector("#new-file-button")?.addEventListener(
                         "click",
                         () => this.bus.emit(events.createTempFile),
                     );
-                    this.querySelector(
-                        "#rename-file-button",
-                    )?.addEventListener("click", () =>
-                        this.bus.emit(events.renameCurrentFile),
+                    this.querySelector("#rename-file-button")?.addEventListener(
+                        "click",
+                        () => this.bus.emit(events.renameCurrentFile),
                     );
-                    this.querySelector(
-                        "#delete-file-button",
-                    )?.addEventListener("click", () =>
-                        this.bus.emit(events.deleteCurrentFile),
+                    this.querySelector("#delete-file-button")?.addEventListener(
+                        "click",
+                        () => this.bus.emit(events.deleteCurrentFile),
                     );
                     this.querySelector("#reset-button")?.addEventListener(
                         "click",
@@ -584,11 +590,21 @@
                     this.bus.off(events.fileChange, this.switchFile);
                     this.bus.off(events.resetFile, this.resetFile);
                     this.bus.off(events.runCode, this.runCodeInEditor);
+                    this.bus.off(
+                        events.downloadCurrentFile,
+                        this.downloadCurrentFile,
+                    );
                     this.bus.off(events.toggleEditor, this.toggleEditor);
                     this.bus.off(events.toggleSplitView, this.toggleSplitView);
                     this.bus.off(events.createTempFile, this.createTempFile);
-                    this.bus.off(events.deleteCurrentFile, this.deleteCurrentFile);
-                    this.bus.off(events.renameCurrentFile, this.renameCurrentFile);
+                    this.bus.off(
+                        events.deleteCurrentFile,
+                        this.deleteCurrentFile,
+                    );
+                    this.bus.off(
+                        events.renameCurrentFile,
+                        this.renameCurrentFile,
+                    );
                     document.removeEventListener(
                         "keydown",
                         this.onGlobalKeydown,
@@ -625,11 +641,21 @@
                     this.bus.on(events.fileChange, this.switchFile);
                     this.bus.on(events.resetFile, this.resetFile);
                     this.bus.on(events.runCode, this.runCodeInEditor);
+                    this.bus.on(
+                        events.downloadCurrentFile,
+                        this.downloadCurrentFile,
+                    );
                     this.bus.on(events.toggleEditor, this.toggleEditor);
                     this.bus.on(events.toggleSplitView, this.toggleSplitView);
                     this.bus.on(events.createTempFile, this.createTempFile);
-                    this.bus.on(events.deleteCurrentFile, this.deleteCurrentFile);
-                    this.bus.on(events.renameCurrentFile, this.renameCurrentFile);
+                    this.bus.on(
+                        events.deleteCurrentFile,
+                        this.deleteCurrentFile,
+                    );
+                    this.bus.on(
+                        events.renameCurrentFile,
+                        this.renameCurrentFile,
+                    );
 
                     document.addEventListener("keydown", this.onGlobalKeydown);
                 }
@@ -654,6 +680,27 @@
                         this.state.currentFile.href,
                         this.editor.state.doc.toString(),
                     );
+                };
+
+                downloadCurrentFile = () => {
+                    if (!this.state.currentFile || !this.editor) {
+                        return;
+                    }
+                    const fileName =
+                        this.state.currentFile.name ||
+                        this.state.currentFile.href.split("/").pop() ||
+                        "repl.js";
+                    const blob = new Blob([this.editor.state.doc.toString()], {
+                        type: "text/javascript;charset=utf-8",
+                    });
+                    const objectUrl = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = objectUrl;
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    URL.revokeObjectURL(objectUrl);
                 };
 
                 switchFile = (href) => {
@@ -692,7 +739,10 @@
                     };
 
                     this.state.files = [...this.state.files, tempFile];
-                    localStorage.setItem(tempFile.href, "// temp file\n");
+                    localStorage.setItem(
+                        tempFile.href,
+                        this.getTempFilePlaceholder(tempFile.name),
+                    );
                     this.persistTempFiles();
                     this.switchFile(tempFile.href);
                 };
@@ -761,7 +811,9 @@
                     if (this.state.currentFile.isTemp) {
                         localStorage.setItem(
                             this.state.currentFile.href,
-                            "// temp file\n",
+                            this.getTempFilePlaceholder(
+                                this.state.currentFile.name,
+                            ),
                         );
                     }
                     this.loadCurrentFile().then(() => this.runCodeInEditor());
@@ -784,7 +836,9 @@
                     );
 
                     if (content == null && this.state.currentFile.isTemp) {
-                        content = "// temp file\n";
+                        content = this.getTempFilePlaceholder(
+                            this.state.currentFile.name,
+                        );
                     }
 
                     if (content == null) {
@@ -864,6 +918,10 @@
                         index += 1;
                     }
                     return `temp-${index}.js`;
+                }
+
+                getTempFilePlaceholder(fileName) {
+                    return `// ${fileName}\n`;
                 }
 
                 makeUniqueFileName(rawName, excludeHref = null) {
@@ -1186,9 +1244,12 @@
             title="Demos"
             defaultView="fullscreen"
             files='[
+                { "name": "plasma_grid.js", "href": "/repl/plasma_grid.js" },
+                { "name": "orb_shader.js", "href": "/repl/orb_shader.js" },
+                { "name": "particle_vortex.js", "href": "/repl/particle_vortex.js" },
+                { "name": "orbit_trails.js", "href": "/repl/orbit_trails.js" },
                 { "name": "cube.js", "href": "/repl/cube.js" },
-                { "name": "shader.js", "href": "/repl/shader.js" },
-                { "name": "basic", "href": "/repl/basic.js" }
+                { "name": "basic.js", "href": "/repl/basic.js" }
             ]'
         ></js-repl>
     </body>
