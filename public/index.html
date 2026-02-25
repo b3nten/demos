@@ -1,526 +1,1195 @@
 <!doctype html>
-<html lang="en" class="quiet-cloak quiet-rose quiet-dark" data-quiet-preload="">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script
-			type="module"
-			src="https://cdn.jsdelivr.net/npm/@quietui/quiet-browser@1.6.1/dist/quiet.loader.js"
-		></script>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/@quietui/quiet-browser@1.6.1/dist/themes/quiet.css"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/tailwindcss@4.1.16/preflight.css"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/asserts.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/assets.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/checks.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/ecs.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/events.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/input.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/lib.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/logging.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/math.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/scope.mjs"
-		/>
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@100x/engine@0.0.5/es2022/structures.mjs"
-		/>
-		<link rel="modulepreload" href="https://esm.sh/codemirror" />
-		<link
-			rel="modulepreload"
-			href="https://esm.sh/@codemirror/lang-javascript"
-		/>
-		<link rel="modulepreload" href="https://esm.sh/thememirror" />
-		<script type="importmap">
-			{
-				"imports": {
-					"@100x/engine/asserts": "https://esm.sh/@100x/engine@0.0.5/es2022/asserts.mjs",
-					"@100x/engine/assets": "https://esm.sh/@100x/engine@0.0.5/es2022/assets.mjs",
-					"@100x/engine/checks": "https://esm.sh/@100x/engine@0.0.5/es2022/checks.mjs",
-					"@100x/engine/ecs": "https://esm.sh/@100x/engine@0.0.5/es2022/ecs.mjs",
-					"@100x/engine/events": "https://esm.sh/@100x/engine@0.0.5/es2022/events.mjs",
-					"@100x/engine/input": "https://esm.sh/@100x/engine@0.0.5/es2022/input.mjs",
-					"@100x/engine/lib": "https://esm.sh/@100x/engine@0.0.5/es2022/lib.mjs",
-					"@100x/engine/logging": "https://esm.sh/@100x/engine@0.0.5/es2022/logging.mjs",
-					"@100x/engine/math": "https://esm.sh/@100x/engine@0.0.5/es2022/math.mjs",
-					"@100x/engine/scope": "https://esm.sh/@100x/engine@0.0.5/es2022/scope.mjs",
-					"@100x/engine/structures": "https://esm.sh/@100x/engine@0.0.5/es2022/structures.mjs",
-					"@100x/engine/three": "https://esm.sh/@100x/engine@0.0.5/es2022/three.mjs",
-					"three": "https://esm.sh/three@0.180.0/es2022/three.bundle.mjs",
-					"codemirror": "https://esm.sh/codemirror",
-					"@codemirror/lang-javascript": "https://esm.sh/@codemirror/lang-javascript",
-					"thememirror": "https://esm.sh/thememirror"
-				}
-			}
-		</script>
-		<!-- Meta -->
-		<title>Demos</title>
-		<!-- Styles -->
-		<style>
-			@theme {
-				--color-clifford: #da373d;
-			}
-			body {
-				background-color: black;
-				font-family: monospace;
-			}
-			.cm-editor {
-				background-color: transparent;
-			}
-			.cm-gutter {
-				user-select: none;
-			}
-			quiet-splitter {
-				position: fixed;
-				display: relative;
-				inset: 0;
-			}
-			quiet-splitter::part(end),
-			quiet-splitter::part(start) {
-				position: relative;
-			}
-			repl-ui {
-				position: absolute;
-				inset: 0;
-			}
-			repl-toolbar {
-				display: flex;
-				position: absolute;
-				top: 0;
-				left: 0;
-				right: 0;
-				justify-content: space-between;
-				align-items: center;
-				padding-inline: 1rem;
-				padding-top: 8px;
-				padding-bottom: 8px;
-				background-color: black;
-				color: white;
-				font-size: 0.75rem;
-			}
-			repl-editor {
-				position: absolute;
-				inset: 0;
-				top: 40px;
-				overflow: scroll;
-				overscroll-behavior: none;
-			}
-			repl-playground {
-				position: absolute;
-				inset: 0;
-				z-index: -10;
-				overflow-x: hidden;
-				overflow-y: auto;
-			}
-			repl-error {
-				position: fixed;
-				right: 0;
-				left: 0;
-				bottom: 0;
-				padding: 1rem;
-				font-family: monospace;
-				color: red;
-				text-align: right;
-			}
-		</style>
-		<!-- UI -->
-		<script type="module">
-			import { EditorView, basicSetup } from "codemirror";
-			import { javascript } from "@codemirror/lang-javascript";
-			import { boysAndGirls } from "thememirror";
-			import { Input, KeyPressedEvent } from "@100x/engine/input";
-			import { Logger, LogLevel, colors } from "@100x/engine/logging";
-			import { run, runCatching } from "@100x/engine/lib";
-			import { createEvent, EventManager } from "@100x/engine/events";
-			import { assert } from "@100x/engine/asserts";
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="modulepreload"
+            href="https://esm.sh/three@0.180.0/es2022/three.bundle.mjs"
+        />
+        <link rel="modulepreload" href="https://esm.sh/codemirror" />
+        <link
+            rel="modulepreload"
+            href="https://esm.sh/@codemirror/lang-javascript"
+        />
+        <link rel="modulepreload" href="https://esm.sh/thememirror" />
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "https://esm.sh/three@0.180.0/es2022/three.bundle.mjs",
+                    "codemirror": "https://esm.sh/codemirror",
+                    "@codemirror/lang-javascript": "https://esm.sh/@codemirror/lang-javascript",
+                    "thememirror": "https://esm.sh/thememirror"
+                }
+            }
+        </script>
+        <title>Demos</title>
+        <style>
+            :root {
+                --bg: #05060a;
+                --panel: #0f111a;
+                --panel-muted: #161a26;
+                --text: #f3f4f6;
+                --text-muted: #b8c0d4;
+                --accent: #58a6ff;
+                --danger: #ff5a6f;
+                --border: #2a3041;
+                --radius: 8px;
+                --toolbar-h: 46px;
+            }
 
-			const stateUpdatedEvent = createEvent("state-updated");
-			const fileChangeEvent = createEvent("file-change");
-			const resetFileEvent = createEvent("reset-file");
-			const runCodeEvent = createEvent("run-code");
-			const toggleEditorEvent = createEvent("toggle-editor");
-			const toggleSplitViewEvent = createEvent("toggle-split-pane");
+            * {
+                box-sizing: border-box;
+            }
 
-			class ReplErrorBar extends HTMLElement {
-				static {
-					customElements.define("repl-error", this);
-				}
-				setup(state, events) {}
-			}
+            html,
+            body {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(
+                    1200px 700px at 0% 0%,
+                    #10172a 0%,
+                    var(--bg) 58%
+                );
+                color: var(--text);
+                font-family:
+                    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                    "Liberation Mono", monospace;
+            }
 
-			class ReplEditor extends HTMLElement {
-				static {
-					customElements.define("repl-editor", this);
-				}
+            js-repl {
+                position: fixed;
+                inset: 0;
+                overflow: hidden;
+            }
 
-				setup(state, events) {
-					this.state = state;
-					this.events = events;
-				}
+            repl-ui,
+            repl-playground,
+            repl-split {
+                position: absolute;
+                inset: 0;
+            }
 
-				connectedCallback() {
-					this.update();
-					this.events.register(stateUpdatedEvent, this.update);
-				}
+            repl-playground {
+                overflow: hidden;
+            }
 
-				disconnectedCallback() {
-					this.events.unregister(stateUpdatedEvent, this.update);
-				}
+            repl-toolbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                height: var(--toolbar-h);
+                padding: 0 12px;
+                border-bottom: 1px solid var(--border);
+                background: rgba(8, 10, 16, 0.86);
+                backdrop-filter: blur(6px);
+                min-width: 0;
+                overflow: hidden;
+            }
 
-				update = () => {
-					if (this.state.editorMode === "hidden") {
-						this.style.display = "none";
-					} else {
-						this.style.display = "block";
-					}
-				};
-			}
+            .toolbar-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-width: 0;
+            }
 
-			class ReplToolbar extends HTMLElement {
-				static {
-					customElements.define("repl-toolbar", this);
-				}
+            .toolbar-group.file-group {
+                flex: 1 1 auto;
+            }
 
-				state;
-				events;
+            .toolbar-group.controls-group {
+                flex: 0 1 auto;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scrollbar-width: thin;
+            }
 
-				setup(state, events) {
-					this.state = state;
-					this.events = events;
-				}
+            .repl-title {
+                color: var(--text-muted);
+                font-size: 12px;
+            }
 
-				fileSelector = run(() => {
-					const div = document.createElement("div");
-					div.style.maxWidth = "400px";
-					div.style.display = "flex";
-					div.style.gap = "8px";
-					div.style.alignItems = "center";
-					return div;
-				});
+            .repl-select,
+            .repl-button {
+                border: 1px solid var(--border);
+                background: var(--panel-muted);
+                color: var(--text);
+                border-radius: 6px;
+                font: inherit;
+                height: 28px;
+            }
 
-				rightToolbar = run(() => {
-					const div = document.createElement("div");
-					div.style.display = "flex";
-					div.style.gap = "8px";
-					div.style.alignItems = "center";
-					return div;
-				});
+            .repl-select {
+                min-width: 150px;
+                max-width: 220px;
+                padding: 0 8px;
+            }
 
-				update = () => {
-					const files = this.state.files;
+            .repl-button {
+                padding: 0 10px;
+                cursor: pointer;
+            }
 
-					this.fileSelector.innerHTML = `
-              <p color="white">${this.state.title}</p>
-              <quiet-select id="file-selector" name="file" size="xs" value=${this.state.currentFile.href}>
-                ${files.map(({ name, href }) => `<option value="${href}">${name}</option>`)}
-              </quiet-select>
-            `;
-					this.appendChild(this.fileSelector);
+            .repl-button:hover {
+                border-color: #4a5470;
+            }
 
-					this.rightToolbar.innerHTML = `
-              <quiet-button icon-label="Run" id="play-button" size="xs"><quiet-icon name="player-play"></quiet-icon></quiet-button>
-              <quiet-tooltip for="play-button">Run the code</quiet-tooltip>
-              <quiet-button icon-label="Reset" id="restore-button" size="xs"><quiet-icon name="restore"></quiet-icon></quiet-button>
-              <quiet-tooltip for="restore-button">Reset the code</quiet-tooltip>
-              <quiet-button icon-label="Toggle Editor" id="show-editor-button" size="xs"><quiet-icon name="code"></quiet-icon></quiet-button>
-              <quiet-tooltip for="show-editor-button">Toggle editor visibility</quiet-tooltip>
-              <quiet-button icon-label="Toggle Split Pane" id="toggle-split-view-button" size="xs"><quiet-icon name="layout-columns"></quiet-icon></quiet-button>
-              <quiet-tooltip for="toggle-split-view-button">Toggle split pane</quiet-tooltip>
-            `;
-					this.appendChild(this.rightToolbar);
+            .repl-button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
 
-					this.querySelector("#file-selector").addEventListener(
-						"quiet-change",
-						(e) => {
-							this.events.notify("file-change", e.target.value);
-						},
-					);
+            .repl-button[data-on="true"] {
+                border-color: var(--accent);
+                color: #dbeafe;
+                background: #1b253b;
+            }
 
-					this.querySelector("#restore-button").addEventListener(
-						"click",
-						() => {
-							this.events.notify(resetFileEvent);
-						},
-					);
+            .repl-button.icon-btn {
+                width: 28px;
+                min-width: 28px;
+                padding: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-					this.querySelector("#play-button").addEventListener("click", () => {
-						this.events.notify(runCodeEvent);
-					});
+            .repl-button.icon-btn svg {
+                width: 14px;
+                height: 14px;
+                stroke: currentColor;
+                stroke-width: 1.8;
+                fill: none;
+                vector-effect: non-scaling-stroke;
+            }
 
-					this.querySelector("#show-editor-button").addEventListener(
-						"click",
-						() => {
-							this.events.notify(toggleEditorEvent);
-						},
-					);
+            .name-dialog {
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: #0f131d;
+                color: var(--text);
+                width: min(420px, calc(100vw - 24px));
+                padding: 14px;
+            }
 
-					this.querySelector("#toggle-split-view-button").addEventListener(
-						"click",
-						() => {
-							this.events.notify(toggleSplitViewEvent);
-						},
-					);
+            .name-dialog::backdrop {
+                background: rgba(0, 0, 0, 0.55);
+            }
 
-					this.querySelector("#show-editor-button").setAttribute(
-						"toggle",
-						this.state.editorMode !== "hidden" ? "on" : "off",
-					);
-					this.querySelector("#toggle-split-view-button").setAttribute(
-						"toggle",
-						this.state.editorMode === "split" ? "on" : "off",
-					);
-				};
+            .name-dialog h3 {
+                margin: 0 0 10px;
+                font-size: 14px;
+            }
 
-				connectedCallback() {
-					this.events.register(stateUpdatedEvent, this.update);
-					this.update();
-				}
+            .name-dialog input {
+                width: 100%;
+                height: 34px;
+                border-radius: 6px;
+                border: 1px solid var(--border);
+                background: #151a28;
+                color: var(--text);
+                padding: 0 10px;
+                font: inherit;
+            }
 
-				disconnectedCallback() {
-					this.events.unregister(stateUpdatedEvent, this.update);
-				}
-			}
+            .name-dialog .actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin-top: 12px;
+            }
 
-			class ReplPlayground extends HTMLElement {
-				static {
-					customElements.define("repl-playground", this);
-				}
+            repl-editor {
+                position: absolute;
+                inset: var(--toolbar-h) 0 0;
+                overflow: auto;
+            }
 
-				observer = new ResizeObserver(() => {
-					this.dispatchEvent(new CustomEvent("resize"));
-				});
+            .cm-editor {
+                min-height: 100%;
+                background: transparent;
+            }
 
-				connectedCallback() {
-					this.observer.observe(this);
-				}
+            .cm-gutters {
+                user-select: none;
+                background: rgba(0, 0, 0, 0.22);
+            }
 
-				disconnectedCallback() {
-					this.observer.unobserve(this);
-				}
-			}
+            repl-error {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: none;
+                z-index: 10;
+                min-height: 0;
+                max-height: 35%;
+                overflow: auto;
+                padding: 10px 12px;
+                border-top: 1px solid #4d1f2c;
+                background: rgba(30, 8, 14, 0.92);
+                color: #ffb3c1;
+                white-space: pre-wrap;
+            }
 
-			class Repl extends HTMLElement {
-				static {
-					customElements.define("js-repl", this);
-				}
+            repl-split {
+                display: grid;
+                grid-template-columns:
+                    minmax(280px, var(--split-left, 48%))
+                    8px minmax(280px, 1fr);
+            }
 
-				static logger = new Logger("repl", LogLevel.Debug, colors.sunset);
+            .split-panel {
+                position: relative;
+                min-width: 0;
+                min-height: 0;
+                overflow: hidden;
+            }
 
-				events = new EventManager();
+            .split-panel.start {
+                border-right: 1px solid var(--border);
+            }
 
-				state = {
-					title: "repl",
-					files: null, // [{ name: string, href: "url" | "localstorage:{name}" }]
-					currentFile: null, // { name: string, href: "url" | "localstorage:{name}" }
-					editorMode: null, // hidden, fullscreen, split
-				};
+            .split-divider {
+                position: relative;
+                cursor: col-resize;
+                background: linear-gradient(180deg, #22283a 0%, #1a1f2d 100%);
+                border-left: 1px solid #2f3750;
+                border-right: 1px solid #2f3750;
+            }
 
-				editor;
+            .split-divider::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 3px;
+                height: 42px;
+                border-radius: 999px;
+                transform: translate(-50%, -50%);
+                background: #59688d;
+            }
 
-				errorWidget = document.createElement("repl-error");
+            .split-divider:hover::before,
+            .split-divider.dragging::before {
+                background: #7ea4ff;
+            }
 
-				toolbarWidget = document.createElement("repl-toolbar");
+            @media (max-width: 900px) {
+                repl-split {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 52% 1px 48%;
+                }
 
-				editorWidget = document.createElement("repl-editor");
+                .split-panel.start {
+                    border-right: 0;
+                    border-bottom: 1px solid var(--border);
+                }
 
-				uiWidget = document.createElement("repl-ui");
+                .split-divider {
+                    cursor: default;
+                    border: 0;
+                    background: transparent;
+                    pointer-events: none;
+                }
 
-				playgroundWidget = document.createElement("repl-playground");
+                .split-divider::before {
+                    display: none;
+                }
+            }
+        </style>
 
-				splitterWidget = document.createElement("quiet-splitter");
+        <script type="module">
+            import { EditorView, basicSetup } from "codemirror";
+            import { javascript } from "@codemirror/lang-javascript";
+            import { boysAndGirls } from "thememirror";
 
-				cleanupFns = new Set();
+            const events = {
+                stateUpdated: "state-updated",
+                fileChange: "file-change",
+                resetFile: "reset-file",
+                runCode: "run-code",
+                toggleEditor: "toggle-editor",
+                toggleSplitView: "toggle-split-view",
+                createTempFile: "create-temp-file",
+                deleteCurrentFile: "delete-current-file",
+                renameCurrentFile: "rename-current-file",
+            };
+            const uiStorage = {
+                currentFile: "js-repl:current-file",
+                editorMode: "js-repl:editor-mode",
+                splitRatio: "js-repl:split-ratio",
+                tempFiles: "js-repl:temp-files",
+            };
+            const icons = {
+                run: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor" stroke="none"></path></svg>`,
+                newFile: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>`,
+                rename: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4zM12 6l4 4"></path></svg>`,
+                del: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12M10 10v7M14 10v7"></path></svg>`,
+                reset: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v6h6M20 20v-6h-6M7.5 16A7 7 0 0019 10M16.5 8A7 7 0 005 14"></path></svg>`,
+                editor: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6L3 12l5 6M16 6l5 6-5 6M14 4l-4 16"></path></svg>`,
+                split: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M12 5v14"></path></svg>`,
+            };
 
-				connectedCallback() {
-					this.state.files = JSON.parse(this.getAttribute("files") ?? "[]");
-					const maybeFile = new URL(location.href).searchParams.get("file");
-					this.state.currentFile = maybeFile
-						? this.state.files.find((f) => f.href === maybeFile)
-						: this.state.files[0];
+            class EventBus {
+                handlers = new Map();
 
-					this.state.editorMode =
-						this.getAttribute("defaultView") ?? "fullscreen";
+                on(event, handler) {
+                    if (!this.handlers.has(event)) {
+                        this.handlers.set(event, new Set());
+                    }
+                    this.handlers.get(event).add(handler);
+                }
 
-					this.state.title = this.getAttribute("title") ?? "repl";
+                off(event, handler) {
+                    this.handlers.get(event)?.delete(handler);
+                }
 
-					this.editor = new EditorView({
-						extensions: [basicSetup, boysAndGirls, javascript()],
-						parent: this.editorWidget,
-					});
+                emit(event, payload) {
+                    this.handlers
+                        .get(event)
+                        ?.forEach((handler) => handler(payload));
+                }
+            }
 
-					this.loadModule().then(this.runCodeInEditor);
+            class ReplErrorBar extends HTMLElement {
+                static {
+                    customElements.define("repl-error", this);
+                }
 
-					this.events.register(fileChangeEvent, this.switchFile);
-					this.events.register(resetFileEvent, this.resetFile);
-					this.events.register(runCodeEvent, this.runCodeInEditor);
-					this.events.register(toggleEditorEvent, this.toggleEditor);
-					this.events.register(toggleSplitViewEvent, this.toggleSplitView);
+                setup() {}
 
-					document.addEventListener("keydown", (event) => {
-						if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-							event.preventDefault();
-							this.saveFile();
-							this.runCodeInEditor();
-						}
-					});
+                setText(message) {
+                    this.textContent = message ?? "";
+                    this.style.display = message ? "block" : "none";
+                }
+            }
 
-					[this.errorWidget, this.toolbarWidget, this.editorWidget].forEach(
-						(widget) => {
-							widget.setup(this.state, this.events);
-							this.uiWidget.appendChild(widget);
-						},
-					);
+            class ReplEditor extends HTMLElement {
+                static {
+                    customElements.define("repl-editor", this);
+                }
 
-					this.render();
+                setup(state, bus) {
+                    this.state = state;
+                    this.bus = bus;
+                }
 
-					Repl.logger.success("repl loaded");
-				}
+                connectedCallback() {
+                    this.update();
+                    this.bus.on(events.stateUpdated, this.update);
+                }
 
-				saveFile = () => {
-					let code = this.editor.state.doc.toString();
-					localStorage.setItem(this.state.currentFile.href, code);
-				};
+                disconnectedCallback() {
+                    this.bus.off(events.stateUpdated, this.update);
+                }
 
-				switchFile = (href) => {
-					this.state.currentFile = this.state.files.find(
-						(file) => file.href === href,
-					);
-					const url = new URL(location.href);
-					url.searchParams.set("file", href);
-					history.pushState(null, null, url.toString());
-					this.loadModule().then(this.runCodeInEditor);
-				};
+                update = () => {
+                    this.style.display =
+                        this.state.editorMode === "hidden" ? "none" : "block";
+                };
+            }
 
-				resetFile = () => {
-					localStorage.removeItem(this.state.currentFile.href);
-					this.loadModule().then(this.runCodeInEditor);
-				};
+            class ReplToolbar extends HTMLElement {
+                static {
+                    customElements.define("repl-toolbar", this);
+                }
 
-				loadModule = async () => {
-					let content = localStorage.getItem(this.state.currentFile.href);
+                setup(state, bus) {
+                    this.state = state;
+                    this.bus = bus;
+                }
 
-					if (!content) {
-						const url = new URL(this.state.currentFile.href, location.origin);
-						url.searchParams.set("t", Date.now());
-						content = await fetch(url)
-							.then((response) => response.text())
-							.catch((error) => {
-								Repl.logger.error(`Failed to load module: ${error.message}`);
-								return "// repl\n";
-							});
-					}
+                connectedCallback() {
+                    this.bus.on(events.stateUpdated, this.update);
+                    this.update();
+                }
 
-					this.editor.dispatch({
-						changes: {
-							from: 0,
-							to: this.editor.state.doc.length,
-							insert: content,
-						},
-					});
-				};
+                disconnectedCallback() {
+                    this.bus.off(events.stateUpdated, this.update);
+                }
 
-				runCodeInEditor = () => {
-					const playground = document.querySelector("repl-playground");
-					playground.innerHTML = "";
-					playground.cleanup = (fn) => this.cleanupFns.add(fn);
-					this.cleanupFns.forEach(run);
-					this.cleanupFns.clear();
+                update = () => {
+                    const files = this.state.files || [];
+                    const options = files
+                        .map(({ name, href }) => {
+                            const selected =
+                                href === this.state.currentFile?.href
+                                    ? " selected"
+                                    : "";
+                            return `<option value="${href}"${selected}>${name}</option>`;
+                        })
+                        .join("");
 
-					let code = this.editor.state.doc.toString();
+                    this.innerHTML = `
+                      <div class="toolbar-group file-group">
+                        <span class="repl-title">${this.state.title}</span>
+                        <select class="repl-select" id="file-selector" aria-label="Select file">${options}</select>
+                      </div>
+                      <div class="toolbar-group controls-group">
+                        <button class="repl-button icon-btn" id="run-button" aria-label="Run code" title="Run code (Cmd/Ctrl+S)">${icons.run}</button>
+                        <button class="repl-button icon-btn" id="new-file-button" aria-label="Create temp file" title="Create temp file">${icons.newFile}</button>
+                        <button class="repl-button icon-btn" id="rename-file-button" ${this.state.currentFile?.isTemp ? "" : "disabled"} aria-label="Rename selected temp file" title="Rename selected temp file">${icons.rename}</button>
+                        ${this.state.currentFile?.isTemp ? `<button class="repl-button icon-btn" id="delete-file-button" aria-label="Delete selected temp file" title="Delete selected temp file">${icons.del}</button>` : ""}
+                        <button class="repl-button icon-btn" id="reset-button" aria-label="Reset current file" title="Reset current file">${icons.reset}</button>
+                        <button class="repl-button icon-btn" id="toggle-editor-button" data-on="${this.state.editorMode !== "hidden"}" aria-label="Show or hide editor" title="Show or hide editor">${icons.editor}</button>
+                        <button class="repl-button icon-btn" id="toggle-split-button" data-on="${this.state.editorMode === "split"}" aria-label="Toggle split view" title="Toggle split view">${icons.split}</button>
+                      </div>
+                    `;
 
-					code = `
-              const playground = document.querySelector("repl-playground");
-              import.meta.main = true;
-              ${code}`;
+                    this.querySelector("#file-selector")?.addEventListener(
+                        "change",
+                        (event) => {
+                            this.bus.emit(
+                                events.fileChange,
+                                event.target.value,
+                            );
+                        },
+                    );
+                    this.querySelector("#run-button")?.addEventListener(
+                        "click",
+                        () => this.bus.emit(events.runCode),
+                    );
+                    this.querySelector("#new-file-button")?.addEventListener(
+                        "click",
+                        () => this.bus.emit(events.createTempFile),
+                    );
+                    this.querySelector(
+                        "#rename-file-button",
+                    )?.addEventListener("click", () =>
+                        this.bus.emit(events.renameCurrentFile),
+                    );
+                    this.querySelector(
+                        "#delete-file-button",
+                    )?.addEventListener("click", () =>
+                        this.bus.emit(events.deleteCurrentFile),
+                    );
+                    this.querySelector("#reset-button")?.addEventListener(
+                        "click",
+                        () => this.bus.emit(events.resetFile),
+                    );
+                    this.querySelector(
+                        "#toggle-editor-button",
+                    )?.addEventListener("click", () =>
+                        this.bus.emit(events.toggleEditor),
+                    );
+                    this.querySelector(
+                        "#toggle-split-button",
+                    )?.addEventListener("click", () =>
+                        this.bus.emit(events.toggleSplitView),
+                    );
+                };
+            }
 
-					const blob = new Blob([code], { type: "text/javascript" });
-					const moduleUrl = URL.createObjectURL(blob);
+            class ReplPlayground extends HTMLElement {
+                static {
+                    customElements.define("repl-playground", this);
+                }
 
-					import(moduleUrl)
-						.then(() => {
-							this.errorWidget.innerText = "";
-						})
-						.catch((error) => {
-							Repl.logger.error("evaluating code", error);
-							this.errorWidget.innerText = String(error);
-						});
-				};
+                observer = new ResizeObserver(() => {
+                    this.dispatchEvent(new CustomEvent("resize"));
+                });
 
-				toggleEditor = () => {
-					let current = this.state.editorMode;
-					this.state.editorMode =
-						current === "hidden" ? "fullscreen" : "hidden";
-					this.events.notify(stateUpdatedEvent);
-					this.render();
-				};
+                connectedCallback() {
+                    this.observer.observe(this);
+                }
 
-				toggleSplitView = () => {
-					let current = this.state.editorMode;
-					this.state.editorMode = current === "split" ? "fullscreen" : "split";
-					this.events.notify(stateUpdatedEvent);
-					this.render();
-				};
+                disconnectedCallback() {
+                    this.observer.unobserve(this);
+                }
+            }
 
-				render = () => {
-					if (this.state.editorMode === "split") {
-						this.uiWidget.setAttribute("slot", "start");
-						this.playgroundWidget.setAttribute("slot", "end");
-						this.splitterWidget = document.createElement("quiet-splitter");
-						this.splitterWidget.appendChild(this.uiWidget);
-						this.splitterWidget.appendChild(this.playgroundWidget);
-						this.appendChild(this.splitterWidget);
-					} else {
-						this.appendChild(this.uiWidget);
-						this.appendChild(this.playgroundWidget);
-						this.splitterWidget.remove();
-					}
-				};
-			}
-		</script>
-	</head>
-	<body>
-		<js-repl
-			title="Demos"
-			defaultView="fullscreen"
-			files='[
-				{ "name": "cube.js", "href": "/repl/cube.js" },
-				{ "name": "shader.js", "href": "/repl/shader.js" },
-				{ "name": "basic", "href": "/repl/basic.js" }
-			]'
-		></js-repl>
-	</body>
+            class Repl extends HTMLElement {
+                static {
+                    customElements.define("js-repl", this);
+                }
+
+                bus = new EventBus();
+
+                state = {
+                    title: "repl",
+                    files: [],
+                    currentFile: null,
+                    editorMode: "fullscreen", // hidden | fullscreen | split
+                };
+
+                editor = null;
+                cleanupFns = new Set();
+                mountedLayout = null;
+                activeModuleUrl = null;
+                splitRatio = 0.48;
+                isDraggingSplit = false;
+
+                errorWidget = document.createElement("repl-error");
+                toolbarWidget = document.createElement("repl-toolbar");
+                editorWidget = document.createElement("repl-editor");
+                uiWidget = document.createElement("repl-ui");
+                playgroundWidget = document.createElement("repl-playground");
+                splitWidget = document.createElement("repl-split");
+                splitDivider = null;
+
+                connectedCallback() {
+                    const bundledFiles = JSON.parse(
+                        this.getAttribute("files") ?? "[]",
+                    );
+                    this.state.files = [
+                        ...bundledFiles,
+                        ...this.loadTempFiles().filter(
+                            (tempFile) =>
+                                !bundledFiles.some(
+                                    (file) => file.href === tempFile.href,
+                                ),
+                        ),
+                    ];
+                    this.state.title = this.getAttribute("title") ?? "repl";
+                    this.state.editorMode =
+                        this.getAttribute("defaultView") ?? "fullscreen";
+                    this.restoreUiPreferences();
+
+                    const maybeFile = new URL(location.href).searchParams.get(
+                        "file",
+                    );
+                    const preferredFile =
+                        maybeFile ||
+                        localStorage.getItem(uiStorage.currentFile);
+                    this.state.currentFile =
+                        this.state.files.find(
+                            (file) => file.href === preferredFile,
+                        ) ||
+                        this.state.files[0] ||
+                        null;
+                    if (this.state.currentFile) {
+                        localStorage.setItem(
+                            uiStorage.currentFile,
+                            this.state.currentFile.href,
+                        );
+                    }
+
+                    this.setupUi();
+                    this.setupEvents();
+                    this.render();
+
+                    this.editor = new EditorView({
+                        extensions: [basicSetup, boysAndGirls, javascript()],
+                        parent: this.editorWidget,
+                    });
+
+                    this.loadCurrentFile().then(() => this.runCodeInEditor());
+                }
+
+                disconnectedCallback() {
+                    this.bus.off(events.fileChange, this.switchFile);
+                    this.bus.off(events.resetFile, this.resetFile);
+                    this.bus.off(events.runCode, this.runCodeInEditor);
+                    this.bus.off(events.toggleEditor, this.toggleEditor);
+                    this.bus.off(events.toggleSplitView, this.toggleSplitView);
+                    this.bus.off(events.createTempFile, this.createTempFile);
+                    this.bus.off(events.deleteCurrentFile, this.deleteCurrentFile);
+                    this.bus.off(events.renameCurrentFile, this.renameCurrentFile);
+                    document.removeEventListener(
+                        "keydown",
+                        this.onGlobalKeydown,
+                    );
+
+                    this.cleanupFns.forEach((fn) => {
+                        try {
+                            fn();
+                        } catch (error) {
+                            console.error("cleanup error", error);
+                        }
+                    });
+                    this.cleanupFns.clear();
+
+                    this.editor?.destroy();
+                    this.revokeActiveModuleUrl();
+                    this.teardownSplitDrag();
+                }
+
+                setupUi() {
+                    [
+                        this.errorWidget,
+                        this.toolbarWidget,
+                        this.editorWidget,
+                    ].forEach((widget) => {
+                        if (typeof widget.setup === "function") {
+                            widget.setup(this.state, this.bus);
+                        }
+                        this.uiWidget.appendChild(widget);
+                    });
+                }
+
+                setupEvents() {
+                    this.bus.on(events.fileChange, this.switchFile);
+                    this.bus.on(events.resetFile, this.resetFile);
+                    this.bus.on(events.runCode, this.runCodeInEditor);
+                    this.bus.on(events.toggleEditor, this.toggleEditor);
+                    this.bus.on(events.toggleSplitView, this.toggleSplitView);
+                    this.bus.on(events.createTempFile, this.createTempFile);
+                    this.bus.on(events.deleteCurrentFile, this.deleteCurrentFile);
+                    this.bus.on(events.renameCurrentFile, this.renameCurrentFile);
+
+                    document.addEventListener("keydown", this.onGlobalKeydown);
+                }
+
+                onGlobalKeydown = (event) => {
+                    if (!(event.ctrlKey || event.metaKey)) {
+                        return;
+                    }
+
+                    if (event.key === "s" || event.key === "S") {
+                        event.preventDefault();
+                        this.saveCurrentFile();
+                        this.runCodeInEditor();
+                    }
+                };
+
+                saveCurrentFile = () => {
+                    if (!this.state.currentFile) {
+                        return;
+                    }
+                    localStorage.setItem(
+                        this.state.currentFile.href,
+                        this.editor.state.doc.toString(),
+                    );
+                };
+
+                switchFile = (href) => {
+                    const nextFile = this.state.files.find(
+                        (file) => file.href === href,
+                    );
+                    if (!nextFile) {
+                        return;
+                    }
+
+                    this.state.currentFile = nextFile;
+                    localStorage.setItem(uiStorage.currentFile, href);
+                    const url = new URL(location.href);
+                    url.searchParams.set("file", href);
+                    history.pushState(null, "", url);
+
+                    this.loadCurrentFile().then(() => this.runCodeInEditor());
+                    this.bus.emit(events.stateUpdated);
+                };
+
+                createTempFile = async () => {
+                    const enteredName = await this.showNameDialog({
+                        title: "Create Temp File",
+                        initialValue: this.nextTempFileName(),
+                        confirmLabel: "Create",
+                    });
+                    if (!enteredName) {
+                        return;
+                    }
+                    const id = crypto.randomUUID();
+                    const uniqueName = this.makeUniqueFileName(enteredName);
+                    const tempFile = {
+                        name: uniqueName,
+                        href: `localstorage:temp:${id}`,
+                        isTemp: true,
+                    };
+
+                    this.state.files = [...this.state.files, tempFile];
+                    localStorage.setItem(tempFile.href, "// temp file\n");
+                    this.persistTempFiles();
+                    this.switchFile(tempFile.href);
+                };
+
+                renameCurrentFile = async () => {
+                    const current = this.state.currentFile;
+                    if (!current?.isTemp) {
+                        return;
+                    }
+
+                    const enteredName = await this.showNameDialog({
+                        title: "Rename Temp File",
+                        initialValue: current.name,
+                        confirmLabel: "Rename",
+                    });
+                    if (!enteredName) {
+                        return;
+                    }
+
+                    const uniqueName = this.makeUniqueFileName(
+                        enteredName,
+                        current.href,
+                    );
+                    current.name = uniqueName;
+                    this.persistTempFiles();
+                    this.bus.emit(events.stateUpdated);
+                };
+
+                deleteCurrentFile = () => {
+                    const current = this.state.currentFile;
+                    if (!current?.isTemp) {
+                        return;
+                    }
+
+                    localStorage.removeItem(current.href);
+                    this.state.files = this.state.files.filter(
+                        (file) => file.href !== current.href,
+                    );
+                    this.persistTempFiles();
+
+                    const nextFile = this.state.files[0] ?? null;
+                    this.state.currentFile = nextFile;
+
+                    const url = new URL(location.href);
+                    if (nextFile) {
+                        url.searchParams.set("file", nextFile.href);
+                        localStorage.setItem(
+                            uiStorage.currentFile,
+                            nextFile.href,
+                        );
+                    } else {
+                        url.searchParams.delete("file");
+                        localStorage.removeItem(uiStorage.currentFile);
+                    }
+                    history.pushState(null, "", url);
+
+                    this.loadCurrentFile().then(() => this.runCodeInEditor());
+                    this.bus.emit(events.stateUpdated);
+                };
+
+                resetFile = () => {
+                    if (!this.state.currentFile) {
+                        return;
+                    }
+                    localStorage.removeItem(this.state.currentFile.href);
+                    if (this.state.currentFile.isTemp) {
+                        localStorage.setItem(
+                            this.state.currentFile.href,
+                            "// temp file\n",
+                        );
+                    }
+                    this.loadCurrentFile().then(() => this.runCodeInEditor());
+                };
+
+                loadCurrentFile = async () => {
+                    if (!this.state.currentFile) {
+                        this.editor?.dispatch({
+                            changes: {
+                                from: 0,
+                                to: this.editor.state.doc.length,
+                                insert: "// No file selected\n",
+                            },
+                        });
+                        return;
+                    }
+
+                    let content = localStorage.getItem(
+                        this.state.currentFile.href,
+                    );
+
+                    if (content == null && this.state.currentFile.isTemp) {
+                        content = "// temp file\n";
+                    }
+
+                    if (content == null) {
+                        const url = new URL(
+                            this.state.currentFile.href,
+                            location.origin,
+                        );
+                        url.searchParams.set("t", String(Date.now()));
+
+                        try {
+                            const response = await fetch(url);
+                            if (!response.ok) {
+                                throw new Error(
+                                    `HTTP ${response.status} while loading ${url.pathname}`,
+                                );
+                            }
+                            content = await response.text();
+                        } catch (error) {
+                            console.error("Failed to load file", error);
+                            content = "// Failed to load file\n";
+                        }
+                    }
+
+                    this.editor.dispatch({
+                        changes: {
+                            from: 0,
+                            to: this.editor.state.doc.length,
+                            insert: content,
+                        },
+                    });
+                };
+
+                loadTempFiles() {
+                    let raw;
+                    try {
+                        raw = JSON.parse(
+                            localStorage.getItem(uiStorage.tempFiles) ?? "[]",
+                        );
+                    } catch {
+                        raw = [];
+                    }
+
+                    if (!Array.isArray(raw)) {
+                        return [];
+                    }
+
+                    return raw
+                        .filter(
+                            (entry) =>
+                                entry &&
+                                typeof entry.name === "string" &&
+                                typeof entry.href === "string",
+                        )
+                        .map((entry) => ({
+                            name: entry.name,
+                            href: entry.href,
+                            isTemp: true,
+                        }));
+                }
+
+                persistTempFiles() {
+                    const tempFiles = this.state.files
+                        .filter((file) => file.isTemp)
+                        .map((file) => ({ name: file.name, href: file.href }));
+                    localStorage.setItem(
+                        uiStorage.tempFiles,
+                        JSON.stringify(tempFiles),
+                    );
+                }
+
+                nextTempFileName() {
+                    const usedNames = new Set(
+                        this.state.files.map((file) => file.name),
+                    );
+                    let index = 1;
+                    while (usedNames.has(`temp-${index}.js`)) {
+                        index += 1;
+                    }
+                    return `temp-${index}.js`;
+                }
+
+                makeUniqueFileName(rawName, excludeHref = null) {
+                    const base = (rawName || "").trim();
+                    const normalized = base
+                        ? base.endsWith(".js")
+                            ? base
+                            : `${base}.js`
+                        : this.nextTempFileName();
+                    const usedNames = new Set(
+                        this.state.files
+                            .filter((file) => file.href !== excludeHref)
+                            .map((file) => file.name),
+                    );
+                    if (!usedNames.has(normalized)) {
+                        return normalized;
+                    }
+
+                    const ext = normalized.endsWith(".js") ? ".js" : "";
+                    const stem = ext ? normalized.slice(0, -3) : normalized;
+                    let index = 2;
+                    let candidate = `${stem}-${index}${ext}`;
+                    while (usedNames.has(candidate)) {
+                        index += 1;
+                        candidate = `${stem}-${index}${ext}`;
+                    }
+                    return candidate;
+                }
+
+                showNameDialog({ title, initialValue, confirmLabel }) {
+                    return new Promise((resolve) => {
+                        const dialog = document.createElement("dialog");
+                        dialog.className = "name-dialog";
+                        dialog.innerHTML = `
+                          <form method="dialog">
+                            <h3>${title}</h3>
+                            <input id="name-input" type="text" autocomplete="off" />
+                            <div class="actions">
+                              <button class="repl-button" value="cancel">Cancel</button>
+                              <button class="repl-button" value="confirm">${confirmLabel}</button>
+                            </div>
+                          </form>
+                        `;
+                        const form = dialog.querySelector("form");
+                        const input = dialog.querySelector("#name-input");
+                        input.value = initialValue ?? "";
+
+                        form.addEventListener("submit", (event) => {
+                            const submitter = event.submitter;
+                            const submitValue =
+                                submitter instanceof HTMLButtonElement
+                                    ? submitter.value
+                                    : "";
+                            if (
+                                submitValue === "confirm" &&
+                                !input.value.trim()
+                            ) {
+                                event.preventDefault();
+                            }
+                        });
+
+                        dialog.addEventListener(
+                            "close",
+                            () => {
+                                const value =
+                                    dialog.returnValue === "confirm"
+                                        ? input.value.trim()
+                                        : null;
+                                dialog.remove();
+                                resolve(value);
+                            },
+                            { once: true },
+                        );
+
+                        document.body.appendChild(dialog);
+                        dialog.showModal();
+                        input.focus();
+                        input.select();
+                    });
+                }
+
+                runCodeInEditor = () => {
+                    if (!this.editor) {
+                        return;
+                    }
+
+                    this.cleanupFns.forEach((fn) => {
+                        try {
+                            fn();
+                        } catch (error) {
+                            console.error("cleanup error", error);
+                        }
+                    });
+                    this.cleanupFns.clear();
+
+                    this.playgroundWidget.innerHTML = "";
+                    this.playgroundWidget.cleanup = (fn) => {
+                        if (typeof fn === "function") {
+                            this.cleanupFns.add(fn);
+                        }
+                    };
+
+                    const userCode = this.editor.state.doc.toString();
+                    const wrappedCode = `
+                      const playground = document.querySelector("repl-playground");
+                      import.meta.main = true;
+                      ${userCode}
+                    `;
+
+                    this.revokeActiveModuleUrl();
+                    this.activeModuleUrl = URL.createObjectURL(
+                        new Blob([wrappedCode], { type: "text/javascript" }),
+                    );
+
+                    import(this.activeModuleUrl)
+                        .then(() => {
+                            this.errorWidget.setText("");
+                        })
+                        .catch((error) => {
+                            console.error("Failed to evaluate module", error);
+                            this.errorWidget.setText(String(error));
+                        });
+                };
+
+                revokeActiveModuleUrl() {
+                    if (this.activeModuleUrl) {
+                        URL.revokeObjectURL(this.activeModuleUrl);
+                        this.activeModuleUrl = null;
+                    }
+                }
+
+                toggleEditor = () => {
+                    this.state.editorMode =
+                        this.state.editorMode === "hidden"
+                            ? "fullscreen"
+                            : "hidden";
+                    localStorage.setItem(
+                        uiStorage.editorMode,
+                        this.state.editorMode,
+                    );
+                    this.bus.emit(events.stateUpdated);
+                    this.render();
+                };
+
+                toggleSplitView = () => {
+                    this.state.editorMode =
+                        this.state.editorMode === "split"
+                            ? "fullscreen"
+                            : "split";
+                    localStorage.setItem(
+                        uiStorage.editorMode,
+                        this.state.editorMode,
+                    );
+                    this.bus.emit(events.stateUpdated);
+                    this.render();
+                };
+
+                restoreUiPreferences() {
+                    const storedMode = localStorage.getItem(
+                        uiStorage.editorMode,
+                    );
+                    if (
+                        storedMode === "hidden" ||
+                        storedMode === "fullscreen" ||
+                        storedMode === "split"
+                    ) {
+                        this.state.editorMode = storedMode;
+                    }
+
+                    const storedRatio = Number.parseFloat(
+                        localStorage.getItem(uiStorage.splitRatio) ?? "",
+                    );
+                    if (Number.isFinite(storedRatio)) {
+                        this.splitRatio = Math.min(
+                            0.75,
+                            Math.max(0.25, storedRatio),
+                        );
+                    }
+                }
+
+                applySplitRatio() {
+                    this.splitWidget.style.setProperty(
+                        "--split-left",
+                        `${this.splitRatio * 100}%`,
+                    );
+                }
+
+                setupSplitDrag() {
+                    if (!this.splitDivider) {
+                        return;
+                    }
+                    this.splitDivider.addEventListener(
+                        "pointerdown",
+                        this.onSplitPointerDown,
+                    );
+                    this.applySplitRatio();
+                }
+
+                teardownSplitDrag() {
+                    if (this.splitDivider) {
+                        this.splitDivider.removeEventListener(
+                            "pointerdown",
+                            this.onSplitPointerDown,
+                        );
+                    }
+                    window.removeEventListener(
+                        "pointermove",
+                        this.onSplitPointerMove,
+                    );
+                    window.removeEventListener(
+                        "pointerup",
+                        this.onSplitPointerUp,
+                    );
+                    window.removeEventListener(
+                        "pointercancel",
+                        this.onSplitPointerUp,
+                    );
+                    this.isDraggingSplit = false;
+                }
+
+                onSplitPointerDown = (event) => {
+                    if (window.matchMedia("(max-width: 900px)").matches) {
+                        return;
+                    }
+
+                    this.isDraggingSplit = true;
+                    this.splitDivider?.classList.add("dragging");
+                    this.splitDivider?.setPointerCapture(event.pointerId);
+                    window.addEventListener(
+                        "pointermove",
+                        this.onSplitPointerMove,
+                    );
+                    window.addEventListener("pointerup", this.onSplitPointerUp);
+                    window.addEventListener(
+                        "pointercancel",
+                        this.onSplitPointerUp,
+                    );
+                };
+
+                onSplitPointerMove = (event) => {
+                    if (!this.isDraggingSplit || !this.splitWidget) {
+                        return;
+                    }
+                    const bounds = this.splitWidget.getBoundingClientRect();
+                    if (bounds.width <= 0) {
+                        return;
+                    }
+                    const nextRatio =
+                        (event.clientX - bounds.left) / bounds.width;
+                    this.splitRatio = Math.min(0.75, Math.max(0.25, nextRatio));
+                    this.applySplitRatio();
+                };
+
+                onSplitPointerUp = () => {
+                    if (!this.isDraggingSplit) {
+                        return;
+                    }
+                    this.isDraggingSplit = false;
+                    this.splitDivider?.classList.remove("dragging");
+                    localStorage.setItem(
+                        uiStorage.splitRatio,
+                        String(this.splitRatio),
+                    );
+                    window.removeEventListener(
+                        "pointermove",
+                        this.onSplitPointerMove,
+                    );
+                    window.removeEventListener(
+                        "pointerup",
+                        this.onSplitPointerUp,
+                    );
+                    window.removeEventListener(
+                        "pointercancel",
+                        this.onSplitPointerUp,
+                    );
+                };
+
+                render = () => {
+                    if (this.mountedLayout) {
+                        this.mountedLayout.remove();
+                    }
+                    this.teardownSplitDrag();
+
+                    if (this.state.editorMode === "split") {
+                        const start = document.createElement("div");
+                        start.className = "split-panel start";
+                        const end = document.createElement("div");
+                        end.className = "split-panel end";
+                        const divider = document.createElement("div");
+                        divider.className = "split-divider";
+                        divider.setAttribute("role", "separator");
+                        divider.setAttribute("aria-orientation", "vertical");
+                        this.splitDivider = divider;
+
+                        start.appendChild(this.uiWidget);
+                        end.appendChild(this.playgroundWidget);
+
+                        this.splitWidget.innerHTML = "";
+                        this.splitWidget.appendChild(start);
+                        this.splitWidget.appendChild(divider);
+                        this.splitWidget.appendChild(end);
+                        this.applySplitRatio();
+                        this.setupSplitDrag();
+
+                        this.appendChild(this.splitWidget);
+                        this.mountedLayout = this.splitWidget;
+                        return;
+                    }
+
+                    this.appendChild(this.playgroundWidget);
+                    this.appendChild(this.uiWidget);
+                    this.mountedLayout = this.uiWidget;
+                };
+            }
+        </script>
+    </head>
+
+    <body>
+        <js-repl
+            title="Demos"
+            defaultView="fullscreen"
+            files='[
+                { "name": "cube.js", "href": "/repl/cube.js" },
+                { "name": "shader.js", "href": "/repl/shader.js" },
+                { "name": "basic", "href": "/repl/basic.js" }
+            ]'
+        ></js-repl>
+    </body>
 </html>
